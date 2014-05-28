@@ -3,10 +3,12 @@ module CompositeLogging
 
     def initialize(logger_class = CompositeLogging::CompositeLogger, &block)
       @formatter_class = nil
-      @formatter_args = {}
+      @formatter_attrs = {}
       @loggers = []
       
       @logger_class = logger_class
+      @logger_attrs = {}
+
       instance_eval(&block)
     end
 
@@ -14,7 +16,8 @@ module CompositeLogging
       logger_args = @logger_class.ancestors.include?(CompositeLogging::CompositeLogger) ? @loggers : @output_args
 
       logger = @logger_class.new(*logger_args)
-      logger.formatter = @formatter_class.new(@formatter_args) if @formatter_class
+      @logger_attrs.each { |k,v| logger.send("#{k}=", v) }
+      logger.formatter = @formatter_class.new(@formatter_attrs) if @formatter_class
 
       logger
     end
@@ -33,7 +36,9 @@ module CompositeLogging
 
     def method_missing(name, *args, &block)
       if @formatter_class && @formatter_class.public_instance_methods.include?(:"#{name}=")
-        @formatter_args[name] = args.first
+        @formatter_attrs[name] = args.first
+      elsif @logger_class.public_instance_methods.include?(:"#{name}=")
+        @logger_attrs[name] = args.first
       else
         super
       end
