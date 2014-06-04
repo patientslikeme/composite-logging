@@ -7,9 +7,10 @@ module CompositeLogging
   autoload :Formatter, "composite_logging/formatter"
   autoload :ColorFormatter, "composite_logging/color_formatter"
 
-  autoload :Builder, "composite_logging/builder"
+  autoload :CompositeLoggerBuilder, "composite_logging/composite_logger_builder"
+  autoload :LoggerBuilder, "composite_logging/logger_builder"
 
-  def self.build(logger_class = CompositeLogger, &block)
-    Builder.new(logger_class, &block).build
+  def self.build(&block)
+    CompositeLoggerBuilder.new(&block).build
   end
 end
