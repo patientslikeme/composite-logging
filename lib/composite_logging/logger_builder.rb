@@ -12,7 +12,7 @@ module CompositeLogging
     def build
       logger = @logger_class.new(*@output_args)
       logger.formatter = @formatter_class.new(@formatter_attrs) if @formatter_class
-      logger.level = @logger_attrs[:level] if @logger_attrs.present?
+      @logger_attrs.each { |k,v| logger.send("#{k}=", v) }
 
       logger
     end
