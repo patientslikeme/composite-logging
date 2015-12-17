@@ -33,7 +33,7 @@ logger = CompositeLogging.build do
   end
 
   logger MyLoggerWithErrorLevel do
-    output          errors.log
+    output          "errors.log"
     formatter       CompositeLogging::Formatter
     level           Logger::ERROR
     datetime_format "%F %T"
