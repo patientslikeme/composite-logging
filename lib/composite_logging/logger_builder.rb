@@ -4,6 +4,7 @@ module CompositeLogging
     def initialize(logger_class = TaggedLogger, &block)
       @logger_class = logger_class
       @formatter_attrs = {}
+      @logger_attrs = {}
 
       instance_eval(&block)
     end
@@ -11,6 +12,8 @@ module CompositeLogging
     def build
       logger = @logger_class.new(*@output_args)
       logger.formatter = @formatter_class.new(@formatter_attrs) if @formatter_class
+      @logger_attrs.each { |k,v| logger.send("#{k}=", v) }
+
       logger
     end
 
@@ -25,6 +28,8 @@ module CompositeLogging
     def method_missing(name, *args, &block)
       if @formatter_class && @formatter_class.public_instance_methods.include?(:"#{name}=")
         @formatter_attrs[name] = args.first
+      elsif @logger_class.public_instance_methods.include?(:"#{name}=")
+        @logger_attrs[name] = args.first
       else
         super
       end

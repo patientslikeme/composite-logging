@@ -19,17 +19,25 @@ Here's an example of configuring a logger using the builder DSL. The resulting l
 ```ruby
 logger = CompositeLogging.build do
   level Logger::DEBUG
-  
+
   logger do
     output          STDOUT
     formatter       CompositeLogging::ColorFormatter
     datetime_format "%T"
   end
-  
+
   logger MyCustomTaggedLogger do
     output          "./log/myapp.log"
     formatter       MyCustomFormatter
     datetime_format "%F %T"
+  end
+
+  logger MyLoggerWithErrorLevel do
+    output          "errors.log"
+    formatter       CompositeLogging::Formatter
+    level           Logger::ERROR
+    datetime_format "%F %T"
+    decolorize      true
   end
 end
 ```
