@@ -1,3 +1,9 @@
+## 2.0.0 (2019-01-09)
+
+Upgrade gem to work with Ruby 2.5.3
+
+BREAKING CHANGE: This update will break older versions of Ruby.
+
 ## 1.1.0 (2015-12-17)
 
 Add ability to pass in additional logger attributes, such as a log level.
