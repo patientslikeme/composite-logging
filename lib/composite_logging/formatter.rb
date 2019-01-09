@@ -2,11 +2,11 @@ require 'ansi'
 
 module CompositeLogging
   class Formatter < ::Logger::Formatter
+    attr_reader :format
+    attr_accessor :logger, :datetime_format, :decolorize
 
-    attr_accessor :logger, :format, :datetime_format, :decolorize
-
-    def initialize(options={})
-      options.each do |k,v|
+    def initialize(options = {})
+      options.each do |k, v|
         send("#{k}=", v) if respond_to?("#{k}=")
       end
 
@@ -23,18 +23,18 @@ module CompositeLogging
       # $2 is the directive letter
       re = /%(-?[\.\d]+)?([#{directives.keys}])/
       replacements = []
-      
+
       @format = str.gsub(re) do |match|
         size, directive = $1, $2
         replacements << directives[directive]
         "%#{size}s"
       end
 
-      instance_eval %{
+      instance_eval <<-RUBY, __FILE__, __LINE__ + 1
         def replacement_values(severity, time, progname, msg)
           [ #{replacements.join(', ')} ]
         end
-      }
+      RUBY
     end
 
     def default_format
@@ -59,12 +59,11 @@ module CompositeLogging
     end
 
     def tags_text
-      if logger && logger.tags.any?
-        logger.tags.map{ |t| "[#{t}]" }.join(' ') + " "
+      if logger&.tags&.any?
+        logger.tags.map { |t| "[#{t}]" }.join(' ') + " "
       else
         ""
       end
     end
-
   end
 end

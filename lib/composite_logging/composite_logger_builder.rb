@@ -1,6 +1,5 @@
 module CompositeLogging
   class CompositeLoggerBuilder
-
     def initialize(logger_class = CompositeLogger, &block)
       @loggers = []
       @logger_class = logger_class
@@ -11,7 +10,7 @@ module CompositeLogging
 
     def build
       logger = @logger_class.new(*@loggers)
-      @logger_attrs.each { |k,v| logger.send("#{k}=", v) }
+      @logger_attrs.each { |k, v| logger.send("#{k}=", v) }
       logger
     end
 
@@ -26,6 +25,5 @@ module CompositeLogging
         super
       end
     end
-
   end
 end
