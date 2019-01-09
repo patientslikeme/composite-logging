@@ -1,6 +1,5 @@
 module CompositeLogging
   class CompositeLogger < ::Logger
-    
     attr_accessor :loggers
 
     def self.build(&block)
@@ -13,12 +12,12 @@ module CompositeLogging
     end
 
     def effective_level
-      silencer_level || self.level
+      silencer_level || level
     end
 
-    def add(severity, message = nil, progname = nil, &block)
+    def add(severity, message = nil, progname = nil)
       return true if loggers.none? || severity < effective_level
-       
+
       # Only evaluate the block once. This code is from the Ruby logger.
       progname ||= @progname
       if message.nil?
@@ -34,7 +33,7 @@ module CompositeLogging
 
       true
     end
-  
+
     def <<(msg)
       loggers.each { |logger| logger << msg }
     end
@@ -44,8 +43,9 @@ module CompositeLogging
     end
 
     # Temporary silence the logger by setting its level higher. This method is thread-safe.
-    def silence(temporary_level = ::Logger::ERROR, &block)
-      self.silencer_level, old_local_level = temporary_level, silencer_level
+    def silence(temporary_level = ::Logger::ERROR)
+      self.silencer_level = temporary_level
+      old_local_level = silencer_level
       yield self
     ensure
       self.silencer_level = old_local_level
@@ -64,9 +64,9 @@ module CompositeLogging
     end
     alias_method :push_tag, :push_tags
 
-    def pop_tags(n = 1)
-      loggers.each { |logger| logger.pop_tags(n) }
-      n
+    def pop_tags(count = 1)
+      loggers.each { |logger| logger.pop_tags(count) }
+      count
     end
     alias_method :pop_tag, :pop_tags
 
@@ -78,7 +78,7 @@ module CompositeLogging
       loggers.any? ? loggers.first.tags : []
     end
 
-  protected
+    protected
 
     def silencer_key
       @silencer_key ||= :"composite_logging_silencer_level_#{object_id}"
@@ -91,6 +91,5 @@ module CompositeLogging
     def silencer_level=(value)
       Thread.current[silencer_key] = value
     end
-
   end
 end

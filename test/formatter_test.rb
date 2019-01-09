@@ -2,7 +2,6 @@ require 'test_helper'
 require 'ansi'
 
 class FormatterTest < Minitest::Test
-
   def build_logger(formatter_options={})
     logger = CompositeLogging::TaggedLogger.new(device = StringIO.new)
     logger.formatter = CompositeLogging::Formatter.new(formatter_options)
@@ -58,5 +57,4 @@ class FormatterTest < Minitest::Test
     logger.error(ANSI.red { "This is red" })
     assert_equal "This is green\nThis is red\n", device.string
   end
-
 end

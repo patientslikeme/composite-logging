@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class TaggedLoggerTest < Minitest::Test
-
   def build_basic_logger
     logger = CompositeLogging::TaggedLogger.new(device = StringIO.new)
     logger.formatter = CompositeLogging::Formatter.new(format: "%m\n")
@@ -74,5 +73,4 @@ class TaggedLoggerTest < Minitest::Test
     assert_equal "[one] One tag\nNo tags\n", @device_1.string
     assert_equal "[one] One tag\nNo tags\n", @device_2.string
   end
-
 end

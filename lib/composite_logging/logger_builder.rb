@@ -1,6 +1,5 @@
 module CompositeLogging
   class LoggerBuilder
-
     def initialize(logger_class = TaggedLogger, &block)
       @logger_class = logger_class
       @formatter_attrs = {}
@@ -12,7 +11,7 @@ module CompositeLogging
     def build
       logger = @logger_class.new(*@output_args)
       logger.formatter = @formatter_class.new(@formatter_attrs) if @formatter_class
-      @logger_attrs.each { |k,v| logger.send("#{k}=", v) }
+      @logger_attrs.each { |k, v| logger.send("#{k}=", v) }
 
       logger
     end
@@ -34,6 +33,5 @@ module CompositeLogging
         super
       end
     end
-
   end
 end

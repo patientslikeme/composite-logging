@@ -1,9 +1,9 @@
 module CompositeLogging
   class TaggedLogger < ::Logger
-
     def initialize(*args)
+      args << { formatter: CompositeLogging::Formatter.new(logger: self) }
       super
-      @default_formatter = CompositeLogging::Formatter.new(logger: self)
+      # @default_formatter = CompositeLogging::Formatter.new(logger: self)
     end
 
     def formatter=(formatter)
@@ -23,24 +23,23 @@ module CompositeLogging
     end
 
     def push_tags(*tags)
-      self.tags.concat(tags)
+      tags.concat(tags)
       tags
     end
     alias_method :push_tag, :push_tags
 
-    def pop_tags(n = 1)
-      self.tags.pop(n)
+    def pop_tags(count = 1)
+      tags.pop(count)
     end
     alias_method :pop_tag, :pop_tags
 
     def clear_tags
-      self.tags.clear
+      tags.clear
     end
 
     def tags
       @tags_key ||= :"composite_logging_tags_#{object_id}"
       Thread.current[@tags_key] ||= []
     end
-
   end
 end

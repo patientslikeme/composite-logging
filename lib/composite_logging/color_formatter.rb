@@ -6,7 +6,7 @@ module CompositeLogging
 
     attr_accessor :tag_color, :level_colors
 
-    def initialize(options={})
+    def initialize(options = {})
       super(options)
 
       self.level_colors = default_level_colors.merge(self.level_colors || {})
@@ -26,11 +26,11 @@ module CompositeLogging
 
     def default_level_colors
       {
-        "DEBUG"   => ANSI[:reset, :white],
-        "INFO"    => ANSI[:green],
-        "WARN"    => ANSI[:yellow],
-        "ERROR"   => ANSI[:red],
-        "FATAL"   => ANSI[:bright, :red],
+        "DEBUG" => ANSI[:reset, :white],
+        "INFO" => ANSI[:green],
+        "WARN" => ANSI[:yellow],
+        "ERROR" => ANSI[:red],
+        "FATAL" => ANSI[:bright, :red],
         "UNKNOWN" => ANSI[:white],
       }
     end
@@ -46,6 +46,5 @@ module CompositeLogging
     def reset_color
       ANSI[:reset]
     end
-
   end
 end
